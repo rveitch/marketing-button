@@ -1,0 +1,30 @@
+{
+  "name": "marketing-button",
+  "version": "1.0.0",
+  "description": "Bro, do you even market?",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rveitch/marketing-button.git"
+  },
+  "author": "Ryan Veitch",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rveitch/marketing-button/issues"
+  },
+  "homepage": "https://github.com/rveitch/marketing-button#readme",
+  "dependencies": {
+    "async": "2.3.0",
+    "body-parser": "1.17.1",
+    "dotenv": "4.0.0",
+    "express": "4.15.2",
+    "express-useragent": "1.0.7",
+    "path": "0.12.7",
+    "request": "2.81.0",
+    "serve-favicon": "2.4.2"
+  }
+}

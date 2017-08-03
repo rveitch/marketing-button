@@ -11,6 +11,7 @@ var async = require("async");
 dotenv.load();
 var root_url = process.env.ROOT_URL;
 var port = Number(process.env.PORT);
+var webhookUrl = process.env.WEBHOOK_URL || 'https://fccua.herokuapp.com/';  // yeah!
 
 /******************************** EXPRESS SETUP *******************************/
 
@@ -64,6 +65,17 @@ app.get('/', function (req, res) {
   	}
   ], function (err, result) {
       res.json( result );
+      request({
+        uri: webhookUrl,
+        method: 'POST',
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.81 Safari/537.36'
+        },
+        json: true,
+        body: result
+      }, function (error, response, body) {
+				console.log('Sent to webookUrl', body);
+      });
   });
 });
 

@@ -7,11 +7,20 @@ var bodyParser = require('body-parser');
 var useragent = require('express-useragent');
 var request = require('request');
 var async = require("async");
+var _ = require('lodash');
+//var ipsum = require("ipsum");
+var Ipsum = require('ipsum').Ipsum; // words, sentences, paragraph
+
+// INTERNAL REQUIRES
+var dictionary = require('./app/dictionary');
+var marketingJargon = new Ipsum(dictionary.curated);
+var hashtagGenerator = new Ipsum(dictionary.hashtag);
+console.log(marketingJargon.generate(1, 'sentence'));
 
 dotenv.load();
 var root_url = process.env.ROOT_URL;
 var port = Number(process.env.PORT);
-var webhookUrl = process.env.WEBHOOK_URL || 'https://fccua.herokuapp.com/';  // yeah!
+var webhookUrl = process.env.WEBHOOK_URL || 'https://fccua.herokuapp.com/';
 
 /******************************** EXPRESS SETUP *******************************/
 
@@ -23,6 +32,69 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(useragent.express());
 
 app.get('/', function (req, res) {
+
+  async.waterfall([
+  	function(callback) {
+			var photoId = Math.floor((Math.random() * 1000) + 1); // between 1-1000
+			const context = {
+				title: null,
+				body: null,
+				image: 'https://unsplash.it/600/315?image=' + photoId,
+			};
+      var titleText = marketingJargon.generate(1, 'sentence');
+      context['title'] = titleText;
+      callback(null, context);
+  	},
+		function(titleContext, callback) {
+			const context = titleContext || {};
+      var bodyText = marketingJargon.generate(2, 'sentence') + ' #' + hashtagGenerator.generate(1, 'words');
+      context['body'] = bodyText;
+      callback(null, context);
+  	}
+  ], function (err, result) {
+      res.json( result );
+
+      request({
+        uri: webhookUrl,
+        method: 'POST',
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.81 Safari/537.36'
+        },
+        json: true,
+        body: result
+      }, function (error, response, body) {
+				console.log('Sent to webookUrl', body);
+      });
+
+  });
+});
+
+app.get('/test', function (req, res) {
+
+  async.waterfall([
+  	function(callback) {
+			var photoId = Math.floor((Math.random() * 1000) + 1); // between 1-1000
+			const context = {
+				title: null,
+				body: null,
+				image: 'https://unsplash.it/600/315?image=' + photoId,
+			};
+      var titleText = marketingJargon.generate(1, 'sentence');
+      context['title'] = titleText;
+      callback(null, context);
+  	},
+		function(titleContext, callback) {
+			const context = titleContext || {};
+      var bodyText = marketingJargon.generate(2, 'sentence') + ' #' + hashtagGenerator.generate(1, 'words');
+      context['body'] = bodyText;
+      callback(null, context);
+  	}
+  ], function (err, result) {
+      res.json( result );
+  });
+});
+
+app.get('/original-generator', function (req, res) {
 
   async.waterfall([
   	function(callback) {

@@ -8,8 +8,11 @@ var useragent = require('express-useragent');
 var request = require('request');
 var async = require("async");
 var _ = require('lodash');
+var moment = require('moment');
+var randomExt = require('random-ext');
 //var ipsum = require("ipsum");
 var Ipsum = require('ipsum').Ipsum; // words, sentences, paragraph
+
 
 // INTERNAL REQUIRES
 var dictionary = require('./app/dictionary');
@@ -43,6 +46,10 @@ app.get('/', function (req, res) {
 			};
       var titleText = marketingJargon.generate(1, 'sentence');
       context['title'] = titleText;
+      const startDate = Date.now();
+      const endDate = moment(Date.now()).utc().endOf('month');  //.add(7, 'days');
+      var randomDate = randomExt.date(new Date(endDate), new Date(startDate));
+      context['date'] = moment(randomDate).format('YYYY-MM-DDTHH:mm:sZ');
       callback(null, context);
   	},
 		function(titleContext, callback) {
@@ -81,6 +88,10 @@ app.get('/test', function (req, res) {
 			};
       var titleText = marketingJargon.generate(1, 'sentence');
       context['title'] = titleText;
+      const startDate = Date.now();
+      const endDate = moment(Date.now()).utc().endOf('month');  //.add(7, 'days');
+      var randomDate = randomExt.date(new Date(endDate), new Date(startDate));
+      context['date'] = moment(randomDate).format('YYYY-MM-DDTHH:mm:sZ');
       callback(null, context);
   	},
 		function(titleContext, callback) {

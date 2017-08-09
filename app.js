@@ -10,20 +10,51 @@ var async = require("async");
 var _ = require('lodash');
 var moment = require('moment');
 var randomExt = require('random-ext');
+var casual = require('casual');
+var changeCase = require('change-case');
+var Sentencer = require('sentencer');
 //var ipsum = require("ipsum");
 var Ipsum = require('ipsum').Ipsum; // words, sentences, paragraph
+var Text = require('markov-chains-text').default;
 
 
 // INTERNAL REQUIRES
 var dictionary = require('./app/dictionary');
 var marketingJargon = new Ipsum(dictionary.curated);
 var hashtagGenerator = new Ipsum(dictionary.hashtag);
-console.log(marketingJargon.generate(1, 'sentence'));
+//console.log(marketingJargon.generate(1, 'sentence'));
 
 dotenv.load();
 var root_url = process.env.ROOT_URL;
 var port = Number(process.env.PORT);
 var webhookUrl = process.env.WEBHOOK_URL || 'https://fccua.herokuapp.com/';
+
+// SENTENCER CONFIG
+Sentencer.configure({
+  actions: {
+    randomName: function() {
+      return casual.full_name;
+    },
+    randomCompany: function() {
+      return casual.company_name;
+    },
+    randomBuzzword: function() {
+      return changeCase.titleCase(marketingJargon.generate(1, 'words'));
+    },
+    randomLowNumber: function() {
+      return randomExt.integer(60, 1);
+    },
+    randomPercent: function() {
+      return randomExt.integer(1000, 1);
+    },
+    currentYear: function() {
+      return moment(Date.now()).format('YYYY');
+    },
+  }
+});
+const blogContent = require('./app/blogtitles');
+//const randomFakeBlogContent = Sentencer.make(blogContent);
+const fakeBlogContent = new Text(blogContent);
 
 /******************************** EXPRESS SETUP *******************************/
 
@@ -38,14 +69,18 @@ app.get('/', function (req, res) {
 
   async.waterfall([
   	function(callback) {
-			var photoId = Math.floor((Math.random() * 1000) + 1); // between 1-1000
+			var photoId = randomExt.integer(1000, 1);//Math.floor((Math.random() * 1000) + 1); // between 1-1000
 			const context = {
 				title: null,
 				body: null,
 				image: 'https://unsplash.it/600/315?image=' + photoId,
 			};
-      var titleText = marketingJargon.generate(1, 'sentence');
-      context['title'] = titleText;
+      var randomPunctuation = randomExt.pick(['.', '?', '!', '...']);
+      //var titleText = marketingJargon.generate(1, 'sentence');
+      //var titleText = marketingJargon.generate(8, 'words') + randomPunctuation;
+      //context['title'] = titleText.charAt(0).toUpperCase() + titleText.slice(1);
+      const title = fakeBlogContent.makeSentence();
+      context['title'] = Sentencer.make(title);
       const startDate = Date.now();
       const endDate = moment(Date.now()).add(3, 'weeks');  //.add(7, 'days'); // .utc().endOf('month');
       var randomDate = randomExt.date(new Date(endDate), new Date(startDate));
@@ -54,7 +89,7 @@ app.get('/', function (req, res) {
   	},
 		function(titleContext, callback) {
 			const context = titleContext || {};
-      var bodyText = marketingJargon.generate(2, 'sentence') + ' #' + hashtagGenerator.generate(1, 'words');
+      var bodyText = marketingJargon.generate(1, 'sentence') + ' #' + hashtagGenerator.generate(1, 'words');
       context['body'] = bodyText;
       callback(null, context);
   	}
@@ -80,14 +115,18 @@ app.get('/test', function (req, res) {
 
   async.waterfall([
   	function(callback) {
-			var photoId = Math.floor((Math.random() * 1000) + 1); // between 1-1000
+			var photoId = randomExt.integer(1000, 1);//Math.floor((Math.random() * 1000) + 1); // between 1-1000
 			const context = {
 				title: null,
 				body: null,
 				image: 'https://unsplash.it/600/315?image=' + photoId,
 			};
-      var titleText = marketingJargon.generate(1, 'sentence');
-      context['title'] = titleText;
+      var randomPunctuation = randomExt.pick(['.', '?', '!', '...']);
+      //var titleText = marketingJargon.generate(1, 'sentence');
+      //var titleText = marketingJargon.generate(8, 'words') + randomPunctuation;
+      //context['title'] = titleText.charAt(0).toUpperCase() + titleText.slice(1);
+      const title = fakeBlogContent.makeSentence();
+      context['title'] = Sentencer.make(title);
       const startDate = Date.now();
       const endDate = moment(Date.now()).add(3, 'weeks');  //.add(7, 'days'); // .utc().endOf('month');
       var randomDate = randomExt.date(new Date(endDate), new Date(startDate));
@@ -96,7 +135,7 @@ app.get('/test', function (req, res) {
   	},
 		function(titleContext, callback) {
 			const context = titleContext || {};
-      var bodyText = marketingJargon.generate(2, 'sentence') + ' #' + hashtagGenerator.generate(1, 'words');
+      var bodyText = marketingJargon.generate(1, 'sentence') + ' #' + hashtagGenerator.generate(1, 'words');
       context['body'] = bodyText;
       callback(null, context);
   	}

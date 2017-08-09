@@ -47,7 +47,7 @@ app.get('/', function (req, res) {
       var titleText = marketingJargon.generate(1, 'sentence');
       context['title'] = titleText;
       const startDate = Date.now();
-      const endDate = moment(Date.now()).utc().endOf('month');  //.add(7, 'days');
+      const endDate = moment(Date.now()).add(3, 'weeks');  //.add(7, 'days'); // .utc().endOf('month');
       var randomDate = randomExt.date(new Date(endDate), new Date(startDate));
       context['date'] = moment(randomDate).format('YYYY-MM-DDTHH:mm:sZ');
       callback(null, context);
@@ -89,7 +89,7 @@ app.get('/test', function (req, res) {
       var titleText = marketingJargon.generate(1, 'sentence');
       context['title'] = titleText;
       const startDate = Date.now();
-      const endDate = moment(Date.now()).utc().endOf('month');  //.add(7, 'days');
+      const endDate = moment(Date.now()).add(3, 'weeks');  //.add(7, 'days'); // .utc().endOf('month');
       var randomDate = randomExt.date(new Date(endDate), new Date(startDate));
       context['date'] = moment(randomDate).format('YYYY-MM-DDTHH:mm:sZ');
       callback(null, context);

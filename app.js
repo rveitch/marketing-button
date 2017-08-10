@@ -28,6 +28,10 @@ dotenv.load();
 var root_url = process.env.ROOT_URL;
 var port = Number(process.env.PORT);
 var webhookUrl = process.env.WEBHOOK_URL || 'https://fccua.herokuapp.com/';
+var webhookUrl_button1 = process.env.WEBHOOK_URL_BUTTON_1 || 'https://fccua.herokuapp.com/';
+var webhookUrl_button2 = process.env.WEBHOOK_URL_BUTTON_2 || 'https://fccua.herokuapp.com/';
+var webhookUrl_button3 = process.env.WEBHOOK_URL_BUTTON_3 || 'https://fccua.herokuapp.com/';
+var webhookUrl_button4 = process.env.WEBHOOK_URL_BUTTON_4 || 'https://fccua.herokuapp.com/';
 
 // SENTENCER CONFIG
 Sentencer.configure({
@@ -65,49 +69,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(useragent.express());
 
+/******************************** EXPRESS ROUTES *******************************/
 app.get('/', function (req, res) {
 
   async.waterfall([
   	function(callback) {
-			var photoId = randomExt.integer(1000, 1);//Math.floor((Math.random() * 1000) + 1); // between 1-1000
-			const context = {
-				title: null,
-				body: null,
-				image: 'https://unsplash.it/600/315?image=' + photoId,
-			};
-      var randomPunctuation = randomExt.pick(['.', '?', '!', '...']);
-      //var titleText = marketingJargon.generate(1, 'sentence');
-      //var titleText = marketingJargon.generate(8, 'words') + randomPunctuation;
-      //context['title'] = titleText.charAt(0).toUpperCase() + titleText.slice(1);
-      const title = fakeBlogContent.makeSentence();
-      context['title'] = Sentencer.make(title);
-      const startDate = Date.now();
-      const endDate = moment(Date.now()).add(3, 'weeks');  //.add(7, 'days'); // .utc().endOf('month');
-      var randomDate = randomExt.date(new Date(endDate), new Date(startDate));
-      context['date'] = moment(randomDate).format('YYYY-MM-DDTHH:mm:sZ');
-      callback(null, context);
+      callback(null, createContent());
   	},
-		function(titleContext, callback) {
-			const context = titleContext || {};
-      var bodyText = marketingJargon.generate(1, 'sentence') + ' #' + hashtagGenerator.generate(1, 'words');
-      context['body'] = bodyText;
-      callback(null, context);
-  	}
   ], function (err, result) {
       res.json( result );
-
-      request({
-        uri: webhookUrl,
-        method: 'POST',
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.81 Safari/537.36'
-        },
-        json: true,
-        body: result
-      }, function (error, response, body) {
-				console.log('Sent to webookUrl', body);
-      });
-
   });
 });
 
@@ -115,32 +85,69 @@ app.get('/test', function (req, res) {
 
   async.waterfall([
   	function(callback) {
-			var photoId = randomExt.integer(1000, 1);//Math.floor((Math.random() * 1000) + 1); // between 1-1000
-			const context = {
-				title: null,
-				body: null,
-				image: 'https://unsplash.it/600/315?image=' + photoId,
-			};
-      var randomPunctuation = randomExt.pick(['.', '?', '!', '...']);
-      //var titleText = marketingJargon.generate(1, 'sentence');
-      //var titleText = marketingJargon.generate(8, 'words') + randomPunctuation;
-      //context['title'] = titleText.charAt(0).toUpperCase() + titleText.slice(1);
-      const title = fakeBlogContent.makeSentence();
-      context['title'] = Sentencer.make(title);
-      const startDate = Date.now();
-      const endDate = moment(Date.now()).add(3, 'weeks');  //.add(7, 'days'); // .utc().endOf('month');
-      var randomDate = randomExt.date(new Date(endDate), new Date(startDate));
-      context['date'] = moment(randomDate).format('YYYY-MM-DDTHH:mm:sZ');
-      callback(null, context);
+      callback(null, createContent());
   	},
-		function(titleContext, callback) {
-			const context = titleContext || {};
-      var bodyText = marketingJargon.generate(1, 'sentence') + ' #' + hashtagGenerator.generate(1, 'words');
-      context['body'] = bodyText;
-      callback(null, context);
-  	}
   ], function (err, result) {
       res.json( result );
+  });
+});
+
+app.get('/dynamic', function (req, res) {
+  if (!req.query.url) {
+    res.json({error: 'Must provide a url in the query params.'});
+  }
+  const dynamicWebhookURL = req.query.url;
+  async.waterfall([
+  	function(callback) {
+			callback(null, createContent());
+  	},
+  ], function (err, result) {
+      res.json( result );
+      sendWebookResponse(result, dynamicWebhookURL);
+  });
+});
+
+app.get('/button1', function (req, res) {
+  async.waterfall([
+  	function(callback) {
+			callback(null, createContent());
+  	},
+  ], function (err, result) {
+      res.json( result );
+      sendWebookResponse(result, webhookUrl_button1);
+  });
+});
+
+app.get('/button2', function (req, res) {
+  async.waterfall([
+  	function(callback) {
+			callback(null, createContent());
+  	},
+  ], function (err, result) {
+      res.json( result );
+      sendWebookResponse(result, webhookUrl_button2);
+  });
+});
+
+app.get('/button3', function (req, res) {
+  async.waterfall([
+  	function(callback) {
+			callback(null, createContent());
+  	},
+  ], function (err, result) {
+      res.json( result );
+      sendWebookResponse(result, webhookUrl_button3);
+  });
+});
+
+app.get('/button4', function (req, res) {
+  async.waterfall([
+  	function(callback) {
+			callback(null, createContent());
+  	},
+  ], function (err, result) {
+      res.json( result );
+      sendWebookResponse(result, webhookUrl_button4);
   });
 });
 
@@ -200,6 +207,47 @@ app.get('/original-generator', function (req, res) {
       });
   });
 });
+
+/******************************** FUNCTIONS *******************************/
+
+function createContent() {
+  const context = {
+  	title: null,
+  	body: null,
+  	image: 'https://unsplash.it/600/315?image=' + randomExt.integer(1000, 1), //Math.floor((Math.random() * 1000) + 1); // between 1-1000
+  };
+
+  var randomPunctuation = randomExt.pick(['.', '?', '!', '...']);
+  //var titleText = marketingJargon.generate(1, 'sentence');
+  //var titleText = marketingJargon.generate(8, 'words') + randomPunctuation;
+  //context['title'] = titleText.charAt(0).toUpperCase() + titleText.slice(1);
+
+  const title = fakeBlogContent.makeSentence();
+  context['title'] = Sentencer.make(title);
+
+  const startDate = Date.now();
+  const endDate = moment(Date.now()).add(3, 'weeks');  //.add(7, 'days'); // .utc().endOf('month');
+  var randomDate = randomExt.date(new Date(endDate), new Date(startDate));
+
+  context['date'] = moment(randomDate).format('YYYY-MM-DDTHH:mm:sZ');
+  var bodyText = marketingJargon.generate(1, 'sentence') + ' #' + hashtagGenerator.generate(1, 'words');
+  context['body'] = bodyText;
+  return context;
+}
+
+function sendWebookResponse(result, webhookUrl) {
+  request({
+    uri: webhookUrl,
+    method: 'POST',
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.81 Safari/537.36'
+    },
+    json: true,
+    body: result
+  }, function (error, response, body) {
+    console.log('Sent to webookUrl', result);
+  });
+}
 
 
 /******************************** SERVER LISTEN *******************************/

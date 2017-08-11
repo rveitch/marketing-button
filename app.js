@@ -226,7 +226,7 @@ function createContent() {
   context['title'] = Sentencer.make(title);
 
   const startDate = Date.now();
-  const endDate = moment(Date.now()).add(3, 'weeks');  //.add(7, 'days'); // .utc().endOf('month');
+  const endDate = moment(Date.now()).add(2, 'weeks');  //.add(7, 'days'); // .utc().endOf('month');
   var randomDate = randomExt.date(new Date(endDate), new Date(startDate));
 
   context['date'] = moment(randomDate).format('YYYY-MM-DDTHH:mm:sZ');

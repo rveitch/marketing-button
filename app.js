@@ -229,7 +229,7 @@ function createContent() {
   const endDate = moment(Date.now()).add(2, 'weeks');  //.add(7, 'days'); // .utc().endOf('month');
   var randomDate = randomExt.date(new Date(endDate), new Date(startDate));
 
-  context['date'] = moment(randomDate).format('YYYY-MM-DDTHH:mm:sZ');
+  context['date'] = moment(randomDate).format('YYYY-MM-DDTHH:mmZ');
   var bodyText = marketingJargon.generate(1, 'sentence') + ' #' + hashtagGenerator.generate(1, 'words');
   context['body'] = bodyText;
   return context;

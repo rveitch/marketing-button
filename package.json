@@ -29,6 +29,7 @@
     "lodash": "4.17.4",
     "markov-chains-text": "1.0.0",
     "moment": "2.18.1",
+    "moment-timezone": "0.5.13",
     "path": "0.12.7",
     "random-ext": "2.5.1",
     "request": "2.81.0",

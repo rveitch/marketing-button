@@ -157,10 +157,12 @@ app.get('/original-generator', function (req, res) {
   async.waterfall([
   	function(callback) {
 			var photoId = Math.floor((Math.random() * 1000) + 1); // between 1-1000
+      var photo2Id = Math.floor((Math.random() * 1000) + 1); // between 1-1000
 			const context = {
 				title: null,
 				body: null,
 				image: 'https://unsplash.it/600/315?image=' + photoId,
+        photo: 'https://unsplash.it/600/315?image=' + photo2Id,
 			};
       request({
         uri: 'http://www.ipsumaas.com/gen/?text=64&style=cos_ipsum',

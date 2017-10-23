@@ -33,6 +33,10 @@ var webhookUrl_button1 = process.env.WEBHOOK_URL_BUTTON_1 || 'https://fccua.hero
 var webhookUrl_button2 = process.env.WEBHOOK_URL_BUTTON_2 || 'https://fccua.herokuapp.com/';
 var webhookUrl_button3 = process.env.WEBHOOK_URL_BUTTON_3 || 'https://fccua.herokuapp.com/';
 var webhookUrl_button4 = process.env.WEBHOOK_URL_BUTTON_4 || 'https://fccua.herokuapp.com/';
+var webhookUrl_button1 = process.env.WEBHOOK_URL_BUTTON_1 || 'https://fccua.herokuapp.com/';
+var webhookUrl_button2 = process.env.WEBHOOK_URL_BUTTON_2 || 'https://fccua.herokuapp.com/';
+var webhookUrl_button3 = process.env.WEBHOOK_URL_BUTTON_3 || 'https://fccua.herokuapp.com/';
+var webhookUrl_button4 = process.env.WEBHOOK_URL_BUTTON_4 || 'https://fccua.herokuapp.com/';
 
 // SENTENCER CONFIG
 Sentencer.configure({
@@ -249,7 +253,7 @@ function sendWebookResponse(result, webhookUrl) {
     json: true,
     body: result
   }, function (error, response, body) {
-    console.log('Sent to webookUrl', result);
+    console.log(`Sent to webookUrl: ${webhookUrl}`, result);
   });
 }
 

@@ -254,7 +254,10 @@ function sendWebookResponse(result, webhookUrl) {
     json: true,
     body: result
   }, function (error, response, body) {
-    console.log(`Sent to webookUrl: ${webhookUrl}`, result);
+    console.log(`Sent to webookUrl: ${webhookUrl}`);
+    console.log(`Payload:`, result);
+    console.log('Response:', body);
+    console.log('statusCode:', response && response.statusCode);
   });
 }
 

@@ -222,7 +222,7 @@ function createContent() {
   	title: null,
   	body: null,
   	image: 'https://unsplash.it/600/315?image=' + randomExt.integer(1000, 1), //Math.floor((Math.random() * 1000) + 1); // between 1-1000
-    photo: 'https://unsplash.it/600/315?image=' + randomExt.integer(1000, 1),
+    photo: 'https://unsplash.it/600/315?image=' + randomExt.integer(1000, 1), // TODO: add helper function for randomly generating arrays of images (or adding multiple properties)
   };
 
   var randomPunctuation = randomExt.pick(['.', '?', '!', '...']);
@@ -238,6 +238,7 @@ function createContent() {
   var randomDate = randomExt.date(new Date(endDate), new Date(startDate));
 
   context['date'] = moment(randomDate).tz(casual.timezone).format('YYYY-MM-DDTHH:mmZ');
+  context['end_date'] = moment(randomDate).add(randomExt.integer(20160, 1440), 'minutes').tz(casual.timezone).format('YYYY-MM-DDTHH:mmZ');
   var bodyText = marketingJargon.generate(1, 'sentence') + ' #' + hashtagGenerator.generate(1, 'words');
   context['body'] = bodyText;
   return context;

@@ -221,8 +221,8 @@ function createContent() {
   const context = {
   	title: null,
   	body: null,
-  	image: 'https://unsplash.it/600/315?image=' + randomExt.integer(1000, 1), //Math.floor((Math.random() * 1000) + 1); // between 1-1000
-    photo: 'https://unsplash.it/600/315?image=' + randomExt.integer(1000, 1), // TODO: add helper function for randomly generating arrays of images (or adding multiple properties)
+  	image: 'https://unsplash.it/600/315?image=' + randomExt.integer(1000, 1),
+    photo: 'https://unsplash.it/600/315?image=' + randomExt.integer(1000, 1),
   };
 
   var randomPunctuation = randomExt.pick(['.', '?', '!', '...']);

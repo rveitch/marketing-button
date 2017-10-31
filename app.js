@@ -226,15 +226,12 @@ function createContent() {
   };
 
   var randomPunctuation = randomExt.pick(['.', '?', '!', '...']);
-  //var titleText = marketingJargon.generate(1, 'sentence');
-  //var titleText = marketingJargon.generate(8, 'words') + randomPunctuation;
-  //context['title'] = titleText.charAt(0).toUpperCase() + titleText.slice(1);
 
   const title = fakeBlogContent.makeSentence();
   context['title'] = Sentencer.make(title);
 
   const startDate = Date.now();
-  const endDate = moment(Date.now()).add(2, 'weeks');  //.add(7, 'days'); // .utc().endOf('month');
+  const endDate = moment(Date.now()).add(2, 'weeks');
   var randomDate = randomExt.date(new Date(endDate), new Date(startDate));
 
   context['date'] = moment(randomDate).tz(casual.timezone).format('YYYY-MM-DDTHH:mmZ');

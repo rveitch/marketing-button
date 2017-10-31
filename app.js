@@ -178,8 +178,6 @@ app.get('/original-generator', function (req, res) {
 				console.log('response.body', response.body);
         var titleText = JSON.parse(response.body);
         context['title'] = titleText;
-        //schema.social_networks.facebook.response = (fbStatus || null )
-        //console.log('titleText', titleText);
         callback(null, context);
       });
   	},

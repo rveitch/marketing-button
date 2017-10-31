@@ -1,5 +1,6 @@
 'use strict';
 var dotenv = require('dotenv');
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -8,22 +9,17 @@ var useragent = require('express-useragent');
 var request = require('request');
 var async = require("async");
 var _ = require('lodash');
-//var moment = require('moment');
 var moment = require('moment-timezone');
 var randomExt = require('random-ext');
 var casual = require('casual');
 var changeCase = require('change-case');
 var Sentencer = require('sentencer');
-//var ipsum = require("ipsum");
 var Ipsum = require('ipsum').Ipsum; // words, sentences, paragraph
 var Text = require('markov-chains-text').default;
 
-
 // INTERNAL REQUIRES
 var dictionary = require('./app/dictionary');
-var marketingJargon = new Ipsum(dictionary.curated);
-var hashtagGenerator = new Ipsum(dictionary.hashtag);
-//console.log(marketingJargon.generate(1, 'sentence'));
+const blogContent = require('./app/blogtitles');
 
 dotenv.load();
 var root_url = process.env.ROOT_URL;
@@ -37,6 +33,9 @@ var webhookUrl_button1 = process.env.WEBHOOK_URL_BUTTON_1 || 'https://fccua.hero
 var webhookUrl_button2 = process.env.WEBHOOK_URL_BUTTON_2 || 'https://fccua.herokuapp.com/';
 var webhookUrl_button3 = process.env.WEBHOOK_URL_BUTTON_3 || 'https://fccua.herokuapp.com/';
 var webhookUrl_button4 = process.env.WEBHOOK_URL_BUTTON_4 || 'https://fccua.herokuapp.com/';
+
+var marketingJargon = new Ipsum(dictionary.curated);
+var hashtagGenerator = new Ipsum(dictionary.hashtag);
 
 // SENTENCER CONFIG
 Sentencer.configure({
@@ -61,8 +60,7 @@ Sentencer.configure({
     },
   }
 });
-const blogContent = require('./app/blogtitles');
-//const randomFakeBlogContent = Sentencer.make(blogContent);
+
 const fakeBlogContent = new Text(blogContent);
 
 /******************************** EXPRESS SETUP *******************************/
@@ -160,8 +158,8 @@ app.get('/original-generator', function (req, res) {
 
   async.waterfall([
   	function(callback) {
-			var photoId = Math.floor((Math.random() * 1000) + 1); // between 1-1000
-      var photo2Id = Math.floor((Math.random() * 1000) + 1); // between 1-1000
+			var photoId = Math.floor((Math.random() * 1000) + 1);
+      var photo2Id = Math.floor((Math.random() * 1000) + 1);
 			const context = {
 				title: null,
 				body: null,
